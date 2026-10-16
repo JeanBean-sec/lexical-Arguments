@@ -22,7 +22,7 @@ typedef struct{
 int main(){
     Token stack[100]; //todo dynamic alloc 
 
-    char string[] = "44 aa";
+    char string[] = "wtf hello;;;";
 
     char *ptr = string;
     Token *stack_ptr = stack;
@@ -33,83 +33,98 @@ int main(){
     while(*ptr != '\0'){
         printf("%c", *ptr);
         if (isspace(*ptr)){
-            count++;
-            *new = '\0'; //clean the first token before moving to the next token
-            *(stack_ptr)++; //go to next empty stack element
-            *(ptr)++;
-            *(new)++;
-            new = stack_ptr->text;
-            *new = *ptr;
+            if (*(ptr+1)=='\0'){
+                break;
+            }
+            else{
+            ptr++;
             continue;
         }
-        else if (ispunct(*ptr)){
-            count++;
-            *new = '\0';
-            *(stack_ptr)++;
-            new = stack_ptr->text;
-            *new = *ptr;
-            *(ptr)++;
-            *(new)++;
-            continue;
         }
-        else if (isdigit(*ptr)){
-            *new = '\0';
-            *new = *ptr;
-            *(ptr)++;
-            *(new)++;
-            continue;
+        if (ispunct(*ptr)){
+                stack_ptr++;
+                new = stack_ptr->text;
+                *new = *ptr;
+                ptr++;
+                new++;
+                count++;
+                continue;
         }
-        else if (*ptr == '.'){
-            count++;
-            *new = '\0';
-            *(stack_ptr)++;
-            new = stack_ptr->text;
-            *new = *ptr;
-            *(ptr)++;
-            *(new)++;
-            continue;
+        // // }
+        // // if (isdigit(*ptr)){
+        // //     *new = '\0';
+        // //     *new = *ptr;
+        // //     *(ptr)++;
+        // //     *(new)++;
+            
+        // }
+        // // if (*ptr == '.'){
+        // //     count++;
+        // //     *new = '\0';
+        // //     *(stack_ptr)++;
+        // //     new = stack_ptr->text;
+        // //     new = ptr;
+        // //     *(ptr)++;
+        // //     (new)++;
+            
+        // }
+        if (isalpha(*ptr)){
+            if (*(ptr+1) == ' '){
+                *new = *ptr;
+                ptr++;
+                new++;
+                *new = '\0';
+                
+                stack_ptr++;
+                count++;
+                new = stack_ptr->text;
+                continue;
+            }
+            else{
+                *new = *ptr; //* has values
+                ptr++;
+                new++;
+            }
         }
-        else if (isalpha(*ptr)){
-            *new = '\0';
-            *new = *ptr;
-            *(ptr)++;
-            *(new)++;
-            continue;
-        }
+        *new = '\0';
 }
     printf("\n\n");
 
-    for (int i = 0; i<count; i++){
-        if (strlen((stack[i].text))>1){
-            stack[i].type = identi;
-            printf("%s:%d\n", stack[i].text, stack[i].type);
+    for (int i = 0; i<=count; i++){
+        if (strlen(stack[i].text)>1){
+            if (isalpha((stack[i].text[0]))){
+                stack[i].type = identi;
+                printf("%s:%d\n", stack[i].text, stack[i].type);
+            }
+            else if(isdigit((stack[i].text[0]))){
+                stack[i].type = number;
+                printf("%s:%d\n", stack[i].text, stack[i].type);
+            }
         }
-        else if (strlen((stack[i].text))==1){
+        else if (strlen(stack[i].text)==1){
                 if (isalpha((stack[i].text[0]))){
                     stack[i].type = identi;
                     printf("%c:%d\n", stack[i].text[0], stack[i].type);
-                    continue;
                 }
                 else if(ispunct(stack[i].text[0])){
                     stack[i].type = opera;
-                    printf("%s:%d \n", stack[i].text, stack[i].type);
-                    continue;
+                    printf("%c:%d \n", stack[i].text[0], stack[i].type);
                 }
                 else if(isdigit(stack[i].text[0])){
                     stack[i].type = number;
-                    printf("%s:%d \n", stack[i].text, stack[i].type);
-                    continue;
+                    printf("%c:%d \n", stack[i].text[0], stack[i].type);
                 }
                 else if(stack[i].text[0] == '.'){
                     stack[i].type = termina;
-                    printf("%s:%d \n", stack[i].text, stack[i].type);
+                    printf("%c:%d \n", stack[i].text[0], stack[i].type);
                 }
                 }
 }
 
     printf("\n");
 
-    printf("%s:%d\n", stack[1].text, stack[1].type);
+    printf("%c:%d \n", stack[0].text[0], stack[0].type);
+
     printf("total number of tokens: %d\n", count);
 
 
