@@ -8,10 +8,10 @@ we go through the string character by character, and we keep track of the curren
 */
 
 enum TokenType{
-    eof,
-    ident,
-    number,
-    op,
+    eof =0,
+    ident=1,
+    number=2,
+    op=3, 
 };
 
 typedef struct{
@@ -23,36 +23,69 @@ typedef struct{
 int main(){
     Token stack[100];
 
-    char string[] = "Hello World!";
+    char string[] = "Hello World! fuck";
 
     char *ptr = string;
     Token *stack_ptr = stack;
     char *new = stack_ptr->text;
 
+    int count = 1;
     
     while(*ptr != '\0'){
         printf("%c", *ptr);
-
-        *new = *ptr;
-    
-        if (*ptr == ' '){
+        if (isspace(*ptr)){
             *new = '\0'; //clean the first token before moving to the next token
+            *(stack_ptr)++; //go to next empty stack element
+            *(ptr)++;
+            *(new)++;
+            new = stack_ptr->text;
+            count++;
+            *new = *ptr;
+            continue;
+        }
+        else if (ispunct(*ptr)){
+            count++;
+            *new = '\0';
             *(stack_ptr)++;
             new = stack_ptr->text;
+            *new = *ptr;
             *(ptr)++;
+            *(new)++;
+            continue;
         }
-        else{
+        else if (isalpha(*ptr)){
+        *new = *ptr;
         *(ptr)++;
         *(new)++;
         }
+        *new = '\0';
 }
-    printf("\n");
-    printf("%s\n", stack[1].text);
+    printf("\n\n");
+
+    for (int i = 0; i<count; i++){
+        if (strlen((stack[i].text))>1){
+            stack[i].type = ident;
+            printf("%s: %d\n", stack[i].text, stack[i].type);
+        }
+        if(ispunct(stack[i].text[0])){
+            stack[i].type = op;
+            printf("%s:%d \n", stack[i].text, stack[i].type);
+    }}
+
+
+    printf("this is '%s'\n", stack[3].text);
+
+    printf("this is the lenght of '%s': %d\n",stack[3].text, strlen(stack[3].text));
+    
+
+    printf("%d\n", count);
+
 
     // *new = '\0';
 
     // printf("%s\n", toke.text);
     // printf("%d\n", toke.type);
+
     return 0;
 }
 
