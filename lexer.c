@@ -22,13 +22,13 @@ typedef struct{
 int main(){
     Token stack[100]; //todo dynamic alloc 
 
-    char string[] = "wtf hello;;;";
+    char string[] = "int sam =32;";
 
     char *ptr = string;
     Token *stack_ptr = stack;
     char *new = stack_ptr->text;
 
-    int count = 1;
+    int count = 0;
     
     while(*ptr != '\0'){
         printf("%c", *ptr);
@@ -38,6 +38,15 @@ int main(){
             }
             else{
             ptr++;
+            continue;
+        }
+        if (*ptr == '='){
+            stack_ptr++;
+            new = stack_ptr->text;
+            *new = *ptr;
+            ptr++;
+            new++;
+            count++;
             continue;
         }
         }
@@ -50,14 +59,34 @@ int main(){
                 count++;
                 continue;
         }
-        // // }
-        // // if (isdigit(*ptr)){
-        // //     *new = '\0';
-        // //     *new = *ptr;
-        // //     *(ptr)++;
-        // //     *(new)++;
-            
-        // }
+
+        if (isdigit(*ptr)){
+            if (*(ptr+1) == ' '){
+                stack_ptr++;
+                count++;
+                new = stack_ptr->text;
+                *new = *ptr;
+                ptr++;
+                new++;
+                *new = '\0';
+                continue;
+            }
+            else if (*(ptr-1)=='='){
+                stack_ptr++;
+                count++;
+                new = stack_ptr->text;
+                *new = *ptr;
+                ptr++;
+                new++;
+                *new = '\0';
+                continue;
+            }
+            else{
+                *new = *ptr; //* has values
+                ptr++;
+                new++;
+            }
+        }
         // // if (*ptr == '.'){
         // //     count++;
         // //     *new = '\0';
@@ -123,7 +152,7 @@ int main(){
 
     printf("\n");
 
-    printf("%c:%d \n", stack[0].text[0], stack[0].type);
+    printf("%s:%d \n", stack[3].text, stack[3].type);
 
     printf("total number of tokens: %d\n", count);
 
