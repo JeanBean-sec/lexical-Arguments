@@ -1,28 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
-/*
-we identify tokens by their type, and we store the text.
-we go through the string character by character, and we keep track of the current token.
-*/
-
-enum TokenType{
-    termina =0,
-    identi=1,
-    number=2,
-    opera=3, 
-};
-
-typedef struct{
-    enum TokenType type;
-    char text[32];
-} Token;
+#include "token.h"
 
 int main(){
     Token stack[100]; //todo dynamic alloc 
 
-    char string[] = "int sam =32;";
+    char string[] = ("int this fucking d\" 1 : {sucks;s} ");
 
     char *ptr = string;
     Token *stack_ptr = stack;
@@ -30,7 +14,7 @@ int main(){
 
     int count = 0;
     
-    while(*ptr != '\0'){
+    while(*ptr != '\0'){ //DONT CHANGE THIS BLOCK 
         printf("%c", *ptr);
         if (isspace(*ptr)){
             if (*(ptr+1)=='\0'){
@@ -51,17 +35,17 @@ int main(){
         }
         }
         if (ispunct(*ptr)){
-                stack_ptr++;
-                new = stack_ptr->text;
-                *new = *ptr;
-                ptr++;
-                new++;
-                count++;
-                continue;
+            stack_ptr++;
+            new = stack_ptr->text;
+            *new = *ptr;
+            ptr++;
+            new++;
+            count++;
+            continue;
         }
 
         if (isdigit(*ptr)){
-            if (*(ptr+1) == ' '){
+            if (*(ptr-1) == ' '){
                 stack_ptr++;
                 count++;
                 new = stack_ptr->text;
@@ -98,16 +82,37 @@ int main(){
             
         // }
         if (isalpha(*ptr)){
-            if (*(ptr+1) == ' '){
+            if (*(ptr-1) == ' '){
+                //move to new stack pointer
+                stack_ptr++;
+                count++;
+                new = stack_ptr->text;
+
+
+                //populate stack and move internal pointer
                 *new = *ptr;
                 ptr++;
                 new++;
                 *new = '\0';
                 
+
+                continue;
+            }
+            else if (!isalpha(*(ptr-1)) || *(ptr+1) == '\n'){
+                //move to new stack pointer
                 stack_ptr++;
                 count++;
                 new = stack_ptr->text;
-                continue;
+
+
+                //populate stack and move internal pointer
+                *new = *ptr;
+                ptr++;
+                new++;
+                *new = '\0';
+                
+
+                continue;  
             }
             else{
                 *new = *ptr; //* has values
@@ -152,7 +157,7 @@ int main(){
 
     printf("\n");
 
-    printf("%s:%d \n", stack[3].text, stack[3].type);
+    printf("%c:%d \n", stack[9].text[0], stack[9].type);
 
     printf("total number of tokens: %d\n", count);
 
@@ -165,6 +170,7 @@ int main(){
     return 0;
 }
 
+// previous code 
 
 // typedef enum{
 //     eof,
