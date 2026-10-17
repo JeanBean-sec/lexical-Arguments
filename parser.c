@@ -3,9 +3,70 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include "token.h"
+#include "node.h"
 
-int main();
 
+Node BindWeight(Node *node, Token *curr);
+
+
+Tree Populate(Token *curr, Tree *tree){
+    Tree AST;
+    Node *node_ptr = tree->nodes; //puts pointer to the start, every call
+    while (*curr->text!='\0'){
+        *node_ptr->Text = *curr->text;
+        //bind weight to node
+        *node_ptr = BindWeight(node_ptr, curr);
+        node_ptr++; //move to next node box
+
+        //move to next token (token cleaning will be after)
+        curr++;
+    }
+    return AST;
+}
+
+Node BindWeight(Node *node, Token *curr){
+    if (curr->type == identi){
+        if (curr->text == "int"){
+            node->weight = IDENT;
+            return *node;
+        }
+    if (curr->type == number){
+        node->weight = NUMBER;
+        return *node;
+
+        }
+    if (curr->type == termina){
+        node->weight = TERMINA;
+        return *node;
+
+    }
+    if (curr->type == opera){
+        if (curr->text == "+"){
+            node->weight = ADD;
+            return *node;
+
+        }
+        if (curr->text == "-"){
+            node->weight = SUBTRACT;
+            return *node;
+
+        }
+        if (curr->text == "*"){
+            node->weight = MULTIPLY;
+            return *node;
+
+        }
+        if (curr->text == "/"){
+            node->weight = DIVIDE;
+            return *node;
+        }
+    }
+    }
+}
+
+
+// terminal loop
 int main()
 {
     char input[100] = "";
@@ -26,7 +87,7 @@ int main()
     while (1)
     {
 
-        printf("T_T: ");
+        printf(">>: ");
 
         fgets(input, sizeof(input), stdin);
 
@@ -57,3 +118,13 @@ int main()
     }
     return 0;
 }
+
+/*
+Planned syntactic features:
+
+highly translated human language
+
+parsing engine: pratt parsing
+
+
+*/
